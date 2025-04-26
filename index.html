@@ -1,0 +1,171 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitri Jamilah - Personal Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .header {
+            background: #35424a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+        .header p {
+            margin: 5px 0;
+        }
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 10px auto;
+            display: block;
+            border: 3px solid white;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            border-bottom: 2px solid #35424a;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .section ul li {
+            padding: 5px 0;
+        }
+        .contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .contact p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-pic">
+        <h1>Fitri Jamilah</h1>
+        <p>Staff Finance | 8 April 1998</p>
+        <div class="contact">
+            <p>📞 0896-9335-0196</p>
+            <p>📧 fitrijamilah123@gmail.com</p>
+            <p>📍 Jln Kebanggaan No 17, B Cemaka Putih Jakarta Pusat</p>
+            <p>📸 fitrijamilah08</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="section">
+            <h2>About Me</h2>
+            <p>Saya Fitri Jamilah, lulusan Institut STAMI jurusan administrasi perpajakan. Saya sudah mulai bekerja sejak lulus SMK sampai dengan lulus kuliah. Profesional, tanggung jawab, disiplin dan fastinya no drama, itu yang saya terapkan ketika saya bekerja.</p>
+        </div>
+        <div class="section">
+            <h2>Education</h2>
+            <ul>
+                <li><strong>Institut STAMI</strong> - D3 Ilmu Administrasi Perpajakan (2017 - 2020)</li>
+                <li><strong>SMK Cemaka</strong> - Akuntansi (2013 - 2016)</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Work Experience</h2>
+            <h3>Internship</h3>
+            <ul>
+                <li>Kantor Pelayanan Pajak Pratama Madya, Jakarta Barat (2015)</li>
+                <li>Kantor Balai Besar Laboratorium Kesehatan, Jakarta Pusat (2015)</li>
+                <li>Datalink Manuaggal Asa Finance, Jakarta Timur (2019)</li>
+            </ul>
+            <h3>Working</h3>
+            <ul>
+                <li><strong>Waruna Bistro Coffee</strong> - Cashier (2026 - 2017), Cemaka Putih</li>
+                <li><strong>Tenggo Foodstreet</strong> - Cashier (2017 - 2018), Rawamangun</li>
+                <li><strong>Grameida</strong> - Cashier (2018), Arta Gading</li>
+                <li><strong>Richeese Factory</strong> - Cashier (2019), Cemaka Putih</li>
+                <li><strong>PT Luna Boga Naraya</strong> - Finance and Accounting (2019 - 2021)</li>
+                <li><strong>PT Sumber Alfaria Trijaya</strong> - Asisten Chief of Store / ACOS (2021 - 2024)</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>Skills</h2>
+            <ul>
+                <li>Accurate</li>
+                <li>Office Excel</li>
+                <li>Cashier APK</li>
+                <li>AI Internet</li>
+            </ul>
+        </div>
+        <div class="section">
+            <h2>My Hobby</h2>
+            <ul>
+                <li>Silat</li>
+                <li>Nonton</li>
+                <li>Traveling</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
